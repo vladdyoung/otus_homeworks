@@ -9,24 +9,24 @@ from selenium import webdriver
 def pytest_addoption(parser):
     parser.addoption(
         '--browser_name',
-        # default='chrome',
-        default='remote',
-        help='Enter browser name'
+        default='chrome',
+        # default='remote',
+        help='Enter name of browser for local driver'
     )
     parser.addoption(
         '--url',
-        default='http://192.168.0.190:8081/',
+        default='http://10.234.28.102:8081/',
         help='Enter url'
     )
     parser.addoption(
         '--browser',
         default='chrome',
         choices=['chrome', 'firefox', 'opera'],
-        help='Enter browser name for remote browser'
+        help='Enter name of browser for remote browser'
     )
-    parser.addoption('--executor', default='192.168.0.190')
+    parser.addoption('--executor', default='10.234.28.102')
     parser.addoption('--version_browser', default='102.0')
-    parser.addoption('--vns', default=False)
+    parser.addoption('--vnc', action='store_true')
 
 
 @allure.step('Start driver')
@@ -38,9 +38,9 @@ def browser(request):
     executor = request.config.getoption('executor')
     remote_browser = request.config.getoption('browser')
     version_browser = request.config.getoption('version_browser')
-    vns = request.config.getoption('vns')
+    vnc = request.config.getoption('vnc')
 
-    log_path = os.path.dirname(__file__) + '\\logs'
+    log_path = os.path.dirname(__file__)
     logger = logging.getLogger(request.node.name)
     logger.setLevel(logging.DEBUG)
     ch = logging.FileHandler(os.path.join(log_path, f'{request.node.module.__name__}.log'))
@@ -52,6 +52,7 @@ def browser(request):
     if browser_name == 'chrome':
         driver = webdriver.Chrome(options=options)
         logger.info(f'Start driver {browser_name}')
+        # driver = webdriver.Chrome()
         driver.implicitly_wait(5)
     elif browser_name == 'firefox':
         driver = webdriver.Firefox()
@@ -68,7 +69,7 @@ def browser(request):
             "browserName": remote_browser,
             "browserVersion": version_browser,
             "selenoid:options": {
-                "enableVNC": vns,
+                "enableVNC": vnc,
                 "enableVideo": False
             }
         }
