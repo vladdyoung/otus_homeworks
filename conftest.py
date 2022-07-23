@@ -3,7 +3,7 @@ import os
 import allure
 import pytest
 from selenium import webdriver
-from webdriver_manager.opera import OperaDriverManager
+# from webdriver_manager.opera import OperaDriverManager
 
 
 def pytest_addoption(parser):
@@ -57,12 +57,12 @@ def browser(request):
         driver = webdriver.Firefox()
         logger.info(f'Start driver {browser_name}')
         driver.implicitly_wait(5)
-    elif browser_name == 'opera':
-        options = webdriver.ChromeOptions()
-        options.add_experimental_option('w3c', True)
-        driver = webdriver.Opera(executable_path=OperaDriverManager().install(), options=options)
-        logger.info(f'Start driver {browser_name}')
-        driver.implicitly_wait(5)
+    # elif browser_name == 'opera':
+    #     options = webdriver.ChromeOptions()
+    #     options.add_experimental_option('w3c', True)
+    #     driver = webdriver.Opera(executable_path=OperaDriverManager().install(), options=options)
+    #     logger.info(f'Start driver {browser_name}')
+    #     driver.implicitly_wait(5)
     elif browser_name == 'remote':
         capabilities = {
             "browserName": remote_browser,
